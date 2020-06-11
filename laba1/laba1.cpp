@@ -7,10 +7,15 @@
 #include <string>
 #include <cmath>
 #include <glut.h>
+#include <locale>
+#include <sstream>
 #define PI 3.1415926535
 
+
+
+
 //Границы отрезка
-float a = -5; 
+float a = -5;
 float b = 10;
 
 float N = 400;
@@ -19,6 +24,16 @@ double h;
 using namespace std;
 
 ofstream file;
+
+void renderSpacedBitmapString(float x ,float y, void *font, string c, double dop)
+{
+    for (int i = 0; c[i]!= '\0'; i++)
+    {
+        glRasterPos2f(x,y);
+        glutBitmapCharacter(font, c[i]);
+        x = x + dop;
+    }
+}
 // Функция для нахождения 1 и 2 производной
 double f(double x)
 {
@@ -37,6 +52,14 @@ double f2(float x)
     return (6*x*x*x*x*x + 505*x*x*x*x + 1700*x*x*x-850*x-101);
 }
 
+double f3(float x)
+{
+    double A = pow(2+x*x*x, 1/3);
+    return (8*(4 + 7*x*x*x)/(x*x*x*A*A*A*A*A*A*A*A));
+    //return (-8*(-5*x*x*x*x*A*A - 2*x*A*A*A*A*A)/(x*x*x*x*A*A*A*A*A*A*A*A*A*A));
+
+}
+
 //Отрисовка координатной системы
 void CoordinateSystem()
 {
@@ -44,11 +67,115 @@ void CoordinateSystem()
     glLineWidth(1.0);       //Òîëùèíà ëèíèé
     glColor3d(0, 0, 0);     //Öâåò ëèíèé - ÷åðíûé
     glBegin(GL_LINES);
-    glVertex2d(-100, 0);
-    glVertex2d(100, 0);
-    glVertex2d(0, -100);
-    glVertex2d(0, 100);
+    glVertex2d(-50, 0);
+    glVertex2d(13, 0);
+    glVertex2d(13, 0);
+    glVertex2d(12, -1);
+    glVertex2d(13, 0);
+    glVertex2d(12, 1);
     glEnd();
+    glRasterPos2d(12.3, 5);
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'x');
+    glBegin(GL_LINES);
+    glVertex2d(0, -100);
+    glVertex2d(0, 50);
+    glVertex2d(0, 50);
+    glVertex2d(-0.5, 45);
+    glVertex2d(0, 50);
+    glVertex2d(0.5, 45);
+    glEnd();
+    glRasterPos2d(1, 48);
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'y');
+    glBegin(GL_LINES);
+    for(int i = -5; i < 10; i += 1)
+    {
+        glVertex2d(i, -1);
+        glVertex2d(i, 1);
+    }
+        for(int i = -50; i < 45; i += 5)
+    {
+        glVertex2d(-0.2, i);
+        glVertex2d(0.2, i);
+    }
+    glEnd();
+    for(int i = -5; i < 10; i += 1)
+    {
+        if (i == 0) continue;
+        std::stringstream ss;
+        string str;
+        ss << i;
+        ss >> str;
+        renderSpacedBitmapString(i, -3,  GLUT_BITMAP_HELVETICA_10, str, 0.2);
+    }
+    for(int i = -50; i < 45; i += 5)
+    {
+        if (i == 0) continue;
+        std::stringstream ss;
+        string str;
+        ss << i;
+        ss >> str;
+        renderSpacedBitmapString(-1, i - 0.2,  GLUT_BITMAP_HELVETICA_10, str, 0.2);
+    }
+}
+
+void CoordinateSystem2()
+{
+
+    glLineWidth(1.0);       //Òîëùèíà ëèíèé
+    glColor3d(0, 0, 0);     //Öâåò ëèíèé - ÷åðíûé
+    glBegin(GL_LINES);
+    glVertex2d(-50, 0);
+    glVertex2d(15, 0);
+    glVertex2d(15, 0);
+    glVertex2d(14, -10);
+    glVertex2d(14, 10);
+    glVertex2d(15, 0);
+    glEnd();
+    glRasterPos2d(14, 14);
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'x');
+
+    glBegin(GL_LINES);
+    glVertex2d(0, -100);
+    glVertex2d(0, 200);
+    glVertex2d(0, 200);
+    glVertex2d(-0.4, 170);
+    glVertex2d(0.4, 170);
+    glVertex2d(0, 200);
+    glEnd();
+    glRasterPos2d(-1, 190);
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'y');
+    glBegin(GL_LINES);
+    for(int i = -200; i < 170; i+= 10)
+    {
+        glVertex2d(-0.1, i);
+        glVertex2d(0.1, i);
+
+    }
+    glEnd();
+    for(int i = -200; i < 170; i+= 10)
+    {
+        if (i == 0 || i == -10) continue;
+        std::stringstream ss;
+        string str;
+        ss << i;
+        ss >> str;
+        renderSpacedBitmapString(-0.9, i,  GLUT_BITMAP_HELVETICA_10, str, 0.17);
+    }
+    glBegin(GL_LINES);
+    for(int i = -5; i <= 10; i+= 1)
+    {
+        glVertex2d(i, -2);
+        glVertex2d(i, 2);
+    }
+    glEnd();
+    for(int i = -5; i <= 10; i+= 1)
+    {
+        std::stringstream ss;
+        string str;
+        ss << i;
+        ss >> str;
+        renderSpacedBitmapString(i-0.1, -10,  GLUT_BITMAP_HELVETICA_10, str, 0.17);
+    }
 
 }
 
@@ -60,7 +187,7 @@ void ChangeSize1(int w, int h)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, w, h);
-    glOrtho(-50.0, 50.0, -50.0, 50.0, -100.0, 100.0);
+    glOrtho(-10.0, 15.0, -50.0, 50.0, -100.0, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -72,7 +199,7 @@ void ChangeSize2(int w, int h)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, w, h);
-    glOrtho(-20.0, 20.0, -20.0, 20.0, -100.0, 100.0);
+    glOrtho(-10.0, 15.0, -200.0, 200.0, -100.0, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -126,7 +253,7 @@ void task1()
 
     glutSwapBuffers();
 }
-	
+
 void task2()	// Отрисовка 1 производной 2 порядка точности
 {
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -151,13 +278,13 @@ void task2()	// Отрисовка 1 производной 2 порядка т�
     glEnd();
     glutSwapBuffers();
 }
-	
+
 void task3() // Отрисовка 2 произовдной 2 порядка точности
 {
     file.open("Task3.txt");
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    CoordinateSystem();
+    CoordinateSystem2();
     glLoadIdentity();
     glColor3ub(0, 255, 0);
     double x = a;
@@ -177,6 +304,14 @@ void task3() // Отрисовка 2 произовдной 2 порядка т�
     }
     glEnd();
     file.close();
+    glColor3ub(200, 100, 20);
+    glBegin(GL_LINES);
+    for (double x = a; x <= b; x+= h)
+    {
+        glVertex2d(x, f3(x));
+        glVertex2d(x+h, f3(x+h));
+    }
+    glEnd();
     glutSwapBuffers();
 }
 
